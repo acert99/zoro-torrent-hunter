@@ -20,3 +20,7 @@ The test combined a white-box code review with a live black-box attack on the lo
 
 - Search plugins are third-party Python and run with your privileges. This is the same model qBittorrent itself uses. Review the code before bumping a commit in `setup.py`.
 - The server binds to `127.0.0.1` only. Don't expose it on a LAN.
+
+## Reporting a vulnerability
+
+Please do not open a public issue. Use [private vulnerability reporting](https://github.com/acert99/zoro-torrent-hunter/security/advisories/new).

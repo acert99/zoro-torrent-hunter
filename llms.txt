@@ -1,0 +1,15 @@
+# Zoro - O caçador de Torrents
+
+> Free, open-source, local torrent search app for Windows with a browser UI, plus a command-line tool for LLM agents. It queries 11 torrent indexers in parallel through qBittorrent search plugins, merges duplicates by infohash and ranks results by seeds, downloads and uploader trust. It only searches; it hosts nothing.
+
+## Docs
+
+- [README](https://github.com/acert99/zoro-torrent-hunter/blob/main/README.md): install, features, supported sites, CLI usage
+- [Claude Code skill](https://github.com/acert99/zoro-torrent-hunter/blob/main/skill/SKILL.md): how an agent should call the CLI
+- [Contributing](https://github.com/acert99/zoro-torrent-hunter/blob/main/CONTRIBUTING.md): setup, code map, rules
+- [Security](https://github.com/acert99/zoro-torrent-hunter/blob/main/SECURITY.md): threat model and pentest findings
+
+## CLI
+
+- `python -I torrent_search.py "ubuntu 24.04" --top 5`: ranked results as text
+- `python -I torrent_search.py "big buck bunny" --json`: machine-readable output

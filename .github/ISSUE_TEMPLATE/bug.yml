@@ -1,0 +1,18 @@
+name: Bug
+description: Algo não funciona como deveria
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: O que aconteceu?
+      description: O que você fez, o que esperava e o que viu. Use um termo de busca legal no exemplo.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versão e sistema
+      placeholder: Zoro 2.4, Windows 11
+    validations:
+      required: true

@@ -8,8 +8,14 @@
 <h1 align="center">Zoro — O caçador de Torrents</h1>
 
 <p align="center">
-  <b>Um caçador de piratas para o seu PC.</b><br>
+  <b>Buscador de torrents grátis e de código aberto para o seu PC.</b><br>
   Busca em 11 sites de torrent ao mesmo tempo, junta duplicados e ranqueia por seeds, downloads e confiança do uploader.
+</p>
+
+<p align="center">
+  <a href="../../releases/latest"><b>⬇️ Baixar para Windows</b></a> ·
+  <a href="#-contribuir"><b>🤝 Contribuir</b></a> ·
+  <a href="#-para-ias-e-agentes"><b>🤖 Para IAs</b></a>
 </p>
 
 <p align="center">
@@ -25,6 +31,8 @@
 </p>
 
 ---
+
+**English:** Zoro is a free, open-source torrent search app (a torrent meta-search engine) for Windows, with a local browser UI and a CLI for LLM agents. It queries 11 indexers in parallel through [qBittorrent search plugins](https://github.com/qbittorrent/search-plugins), merges duplicates by infohash and ranks results by seeds, downloads and uploader trust. No account, no ads, no AI required, and it runs only on your machine. Contributions are welcome.
 
 ## ⚔️ Instalar (Windows)
 
@@ -76,14 +84,22 @@ Foram testados os 73 plugins públicos da [wiki do qBittorrent](https://github.c
 
 ---
 
+## 🤖 Para IAs e agentes
+
+O Zoro tem uma CLI feita para LLMs, com saída em texto ou `--json`, e uma skill pronta para o Claude Code. Resumo para agentes em [llms.txt](llms.txt) e regras para quem programa com IA em [AGENTS.md](AGENTS.md).
+
+```bash
+python -I torrent_search.py "ubuntu 24.04" --json
+```
+
 ## 🧭 Outros jeitos de usar
 
 <details>
 <summary><b>Rodar pelo código-fonte (qualquer SO com Python 3.10+)</b></summary>
 
 ```bash
-git clone https://github.com/acert99/zoro-torrent-hunter
-cd zoro-torrent-hunter
+git clone https://github.com/acert99/zoro-torrent-hunter ~/tools/zoro-torrent-hunter
+cd ~/tools/zoro-torrent-hunter
 pip install certifi
 python -I setup.py     # baixa o runtime nova3 e os plugins fixados para vendor/
 python -I web.py       # abre a interface (no Windows: start-ui.bat)
@@ -128,6 +144,17 @@ Os plugins ficam congelados dentro do exe. Para atualizar os sites, gere de novo
 - Cada site roda num processo próprio com timeout (`run_engine.py`); o `nova2.py` foi deixado de lado porque o multiprocessing dele é lento no Windows.
 - Usa o bundle de certificados do certifi, porque stores velhos do Windows dão erro falso de `certificate has expired`.
 </details>
+
+## 🤝 Contribuir
+
+O Zoro está aberto a contribuições, e dá para ajudar mesmo sem programar:
+
+- **Código:** pegue uma issue [`good first issue`](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
+- **Sites:** teste plugins novos e avise quais pararam de funcionar.
+- **Ideias e bugs:** abra uma [issue](../../issues/new/choose) ou puxe assunto nas [Discussions](../../discussions).
+- **Divulgação:** deixe uma ⭐ para mais gente achar o projeto.
+
+Como começar: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📜 Licença e uso
 

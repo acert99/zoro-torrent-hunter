@@ -12,7 +12,7 @@ Buscador do qBittorrent adaptado para LLMs: CLI sem interface, buscas paralelas,
 Várias buscas = vários argumentos na MESMA chamada (rodam em paralelo, ~25s no total):
 
 ```bash
-python -I ~/tools/llm-torrent-search/torrent_search.py "ubuntu 24.04" "debian 12" --top 5
+python -I ~/tools/zoro-torrent-hunter/torrent_search.py "ubuntu 24.04" "debian 12" --top 5
 ```
 
 Opções:
@@ -38,7 +38,7 @@ Tabela com os 5 melhores: número, seeds, tamanho, confiança, nome, site. Desca
 Usuário escolhe um número → abrir pelo número da última busca (resolve página→magnet, valida o link e abre no qBittorrent):
 
 ```bash
-python -I ~/tools/llm-torrent-search/torrent_search.py --open 3
+python -I ~/tools/zoro-torrent-hunter/torrent_search.py --open 3
 ```
 
 ## Segurança
@@ -49,5 +49,5 @@ python -I ~/tools/llm-torrent-search/torrent_search.py --open 3
 
 ## Manutenção
 
-- Reinstalar motores: `python -I ~/tools/llm-torrent-search/setup.py` (arquivos fixados por commit + sha256; recusa se mudar)
+- Reinstalar motores: `python -I ~/tools/zoro-torrent-hunter/setup.py` (arquivos fixados por commit + sha256; recusa se mudar)
 - Plugin novo da wiki (https://github.com/qbittorrent/search-plugins/wiki/Unofficial-search-plugins): revisar o código antes, depois adicionar em `SOURCES` no `setup.py` com URL fixada em commit e rodar `setup.py --rehash`.
