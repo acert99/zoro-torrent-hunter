@@ -23,6 +23,12 @@ class InfohashTest(unittest.TestCase):
 
     def test_not_a_magnet(self):
         self.assertEqual(ts.infohash("https://archive.org/download/x/x_archive.torrent"), "")
+        # a page URL that happens to carry a btih must not merge with (and outscore) the real magnet
+        self.assertEqual(ts.infohash(f"https://example.org/dl?xt=urn:btih:{HEX}"), "")
+
+    def test_row_carries_infohash(self):
+        self.assertEqual(ts.row("Big Buck Bunny", 1, 3, 0, "nyaa", f"magnet:?xt=urn:btih:{B32}")["infohash"], HEX)
+        self.assertEqual(ts.row("x", 1, 3, 0, "rutor", "https://d.rutor.info/download/1")["infohash"], "")
 
     def test_merge_base32_with_hex(self):
         rows = [ts.row("Big Buck Bunny", 1, 3, 0, "nyaa", f"magnet:?xt=urn:btih:{B32}"),
