@@ -12,6 +12,12 @@ python -I setup.py     # baixa os plugins fixados para vendor/
 python -I web.py       # abre http://127.0.0.1:8765
 ```
 
+Testes (sem rede, sem plugins):
+
+```bash
+python -m unittest discover -s tests
+```
+
 ## Mapa do código
 
 | Arquivo | Função |
@@ -35,7 +41,7 @@ python -I web.py       # abre http://127.0.0.1:8765
 
 1. Crie um branch a partir de `main`.
 2. Faça uma mudança por PR.
-3. Teste a busca no navegador e descreva o que testou.
+3. Rode os testes, teste a busca no navegador e descreva o que testou.
 4. Use commits no formato [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`).
 
 Vulnerabilidade de segurança não vai em issue pública: siga o [SECURITY.md](SECURITY.md).
