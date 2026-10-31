@@ -53,6 +53,13 @@ SOURCES = (
 # The plugin rewrites this file with defaults if any key is missing or has the wrong type.
 RUTOR_CONFIG = {"magnet": True, "proxy": False, "proxies": {"http": "", "https": ""},
                 "ua": "Mozilla/5.0 (X11; Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0 "}
+# Files setup.py writes besides SOURCES. build.py ships exactly vendor_files() and nothing else.
+GENERATED = ("__init__.py", "engines/__init__.py", "engines/rutor.json")
+
+
+def vendor_files():
+    """Paths relative to vendor/nova3 of every file this script writes."""
+    return [dest for dest, _, _ in SOURCES] + list(GENERATED)
 
 
 def download(url):
