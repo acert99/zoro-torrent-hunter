@@ -362,6 +362,8 @@ def main():
     ENGINE_TIMEOUT = args.timeout
 
     engines = [e.strip() for e in args.engines.split(",") if e.strip()]
+    if not engines:
+        ap.error("--engines needs at least one engine")
     jobs = [(q, e) for q in args.queries for e in engines]
     with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
         futures = [(q, pool.submit(run_engine, e, q, args.cat)) for q, e in jobs]
