@@ -13,6 +13,6 @@ body:
     id: version
     attributes:
       label: Versão e sistema
-      placeholder: Zoro 2.4, Windows 11
+      placeholder: Zoro 2.4.1, Windows 11
     validations:
       required: true

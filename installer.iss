@@ -1,7 +1,7 @@
 ﻿; Inno Setup script: dist\Zoro-Setup.exe (Zoro - O caçador de Torrents)
 ; Build: python -I build.py, then ISCC installer.iss
 #define AppName "Zoro"
-#define AppVersion "2.4"
+#define AppVersion "2.4.1"
 
 [Setup]
 AppId={{6F1C2E7A-3B9D-4E52-9C1A-7D4B2E8F0A31}
@@ -34,6 +34,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "dist\Zoro\*"; DestDir: "{app}"; Excludes: "__pycache__,*.pyc,*.log"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion
+Source: "THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{#AppName}"; Filename: "{app}\Zoro.exe"

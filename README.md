@@ -20,7 +20,7 @@
 
 <p align="center">
   <img alt="Windows" src="https://img.shields.io/badge/Windows-10%2F11-1F6B45?style=for-the-badge&logo=windows&logoColor=F3EAD3">
-  <img alt="Versão" src="https://img.shields.io/badge/vers%C3%A3o-2.4-D7261E?style=for-the-badge&labelColor=1F6B45">
+  <img alt="Versão" src="https://img.shields.io/badge/vers%C3%A3o-2.4.1-D7261E?style=for-the-badge&labelColor=1F6B45">
   <img alt="Local" src="https://img.shields.io/badge/roda-s%C3%B3%20local-B8902E?style=for-the-badge&labelColor=1F6B45">
   <img alt="Sem IA" src="https://img.shields.io/badge/sem%20IA-sem%20conta-4FA86A?style=for-the-badge&labelColor=1F6B45">
 </p>
@@ -158,6 +158,7 @@ Como começar: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📜 Licença e uso
 
-- O código deste repositório é MIT. Os plugins baixados mantêm as próprias licenças (a maioria GPL).
+- O código deste repositório é MIT. Os plugins e o runtime incluídos no exe mantêm as próprias licenças: veja [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+- Os plugins `yts` e `sktorrent` não têm licença. Eles seguem no exe por enquanto, e a autorização será pedida aos autores. Se algum autor pedir a retirada, o plugin sai do build.
 - O Zoro só busca; ele não hospeda nada. Use para conteúdo legal: distros Linux, domínio público, archive.org, obras liberadas.
 - Zoro e One Piece pertencem aos seus donos. Este é um projeto pessoal, sem fins comerciais.
