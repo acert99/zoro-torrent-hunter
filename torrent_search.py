@@ -293,6 +293,8 @@ def save_last(report):
 
 def open_result(n):
     """Open result N of the last search. Takes only an integer so no result text ever reaches a shell."""
+    if n < 1:  # rows[n - 1] would silently wrap around to the end of the list
+        sys.exit(f"no result {n} in last search")
     try:
         with open(LAST_RESULTS, encoding="utf-8") as f:
             rows = json.load(f)
@@ -319,6 +321,8 @@ def main():
         print(resolve_magnet(sys.argv[2], sys.argv[3]) or "could not resolve a valid magnet")
         return
     if len(sys.argv) == 3 and sys.argv[1] == "--open":
+        if not sys.argv[2].isdecimal():
+            sys.exit("--open takes a result number: 1, 2, ...")
         open_result(int(sys.argv[2]))
         return
     ap = argparse.ArgumentParser()
