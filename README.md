@@ -55,6 +55,7 @@ Para fechar, feche a janela do console. Para desinstalar: Configurações > Apps
 | **Um clique** | O Magnet abre no qBittorrent; links de página viram magnet na hora; archive.org baixa `.torrent`. |
 | **Filtros** | Nome, seeds mínimos, só confiáveis, ordenação por qualquer coluna, atalho `/` para buscar. |
 | **Tema claro e escuro** | Paleta verde-bandana, vermelho e bege. |
+| **Português e inglês** | Botão PT/EN no topo; na primeira vez segue o idioma do navegador. |
 
 ## 🛡️ Segurança
 
