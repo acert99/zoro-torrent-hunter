@@ -9,6 +9,8 @@ Each positional argument is a separate query; queries and engines run in paralle
 piratebay, nyaa and archive.org are fetched natively to expose uploader trust and download counts.
 """
 import argparse
+import base64
+import binascii
 import json
 import math
 import os
@@ -214,11 +216,25 @@ def score(r):
     return round(base * TRUST_WEIGHT.get(r["trust"], 1.0), 1)
 
 
+def infohash(link):
+    """Lowercase hex infohash of a magnet link, or "". Base32 hashes (32 chars) are converted to hex
+    so the same torrent merges no matter which form a site uses."""
+    m = re.search(r"btih:([A-Za-z0-9]+)", link)
+    if not m:
+        return ""
+    h = m.group(1)
+    if len(h) == 32:
+        try:
+            return base64.b32decode(h.upper()).hex()
+        except binascii.Error:
+            pass
+    return h.lower()
+
+
 def merge(results):
     best = {}
     for r in results:
-        m = re.search(r"btih:([A-Za-z0-9]+)", r["link"])
-        key = m.group(1).lower() if m else r["link"]
+        key = infohash(r["link"]) or r["link"]
         if key not in best or score(r) > score(best[key]):
             best[key] = r
     rows = list(best.values())

@@ -26,7 +26,17 @@ function human(n) {
   return n.toFixed(1) + " " + u[i];
 }
 const fmt = (n) => n.toLocaleString("pt-BR");
-function keyOf(r) { const m = /btih:([a-z0-9]+)/i.exec(r.link); return m ? m[1].toLowerCase() : r.link; }
+// Same torrent, same key: base32 infohashes (32 chars) become hex, like infohash() in torrent_search.py.
+function b32hex(s) {
+  const A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"; let bits = "", out = "";
+  for (const c of s.toUpperCase()) { const v = A.indexOf(c); if (v < 0) return ""; bits += v.toString(2).padStart(5, "0"); }
+  for (let i = 0; i < bits.length; i += 4) out += parseInt(bits.slice(i, i + 4), 2).toString(16);
+  return out;
+}
+function keyOf(r) {
+  const m = /btih:([a-z0-9]+)/i.exec(r.link); if (!m) return r.link;
+  return (m[1].length === 32 && b32hex(m[1])) || m[1].toLowerCase();
+}
 
 /* theme */
 function applyTheme(t) {
