@@ -20,7 +20,7 @@ Opções:
 - `--top N`: resultados por busca (padrão 10)
 - `--engines a,b`: padrão `piratebay,nyaa,limetorrents,torrentscsv,rutor`. Extras: `pirateiro` (geral), `academictorrents` (datasets/cursos), `yts` (filmes), `animetosho` (anime), `sktorrent` (eslovaco)
 - `--timeout S`: segundos por site (padrão 20). Extras lentos: `--timeout 40`
-- `--json`: saída estruturada (`name, size, seeds, leech, engine, link, trust, downloads, score`)
+- `--json`: saída estruturada (`name, size, seeds, leech, engine, link, trust, downloads, infohash, score`)
 
 Saída texto: `N. [score X] seedsS/leechL tamanho TRUST Ndl | nome (motor)` + linha com magnet/link.
 

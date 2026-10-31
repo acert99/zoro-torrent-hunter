@@ -26,7 +26,8 @@ function human(n) {
   return n.toFixed(1) + " " + u[i];
 }
 const fmt = (n) => n.toLocaleString("pt-BR");
-function keyOf(r) { const m = /btih:([a-z0-9]+)/i.exec(r.link); return m ? m[1].toLowerCase() : r.link; }
+// The server sends each magnet's infohash as lowercase hex (base32 already converted), so one torrent = one key.
+const keyOf = (r) => r.infohash || r.link;
 
 /* theme */
 function applyTheme(t) {
@@ -101,7 +102,7 @@ async function search(ev) {
 
 function add(r) {
   const k = keyOf(r), cur = results.get(k);
-  if (!cur) { results.set(k, { ...r, sources: [r.engine] }); return; }
+  if (!cur) { results.set(k, { ...r, key: k, sources: [r.engine] }); return; }
   if (!cur.sources.includes(r.engine)) cur.sources.push(r.engine);
   const best = r.score > cur.score ? r : cur;
   const dl = [cur.downloads, r.downloads].filter((x) => x != null);
@@ -145,7 +146,7 @@ function renderTable() {
     return;
   }
   $("#rows").innerHTML = shown.map((r) => {
-    const k = keyOf(r), link = safeUrl(r.link);
+    const k = r.key, link = safeUrl(r.link);  // not keyOf(r): resolving a page link changes r.link
     const trust = r.trust ? `<span class="badge b-${esc(r.trust)}">${esc(r.trust.toUpperCase())}</span>` : "";
     const srcs = r.sources.map((s) => `<span class="badge badge-secondary">${esc(s)}</span>`).join("");
     let act;
