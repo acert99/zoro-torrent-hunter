@@ -62,7 +62,12 @@ def main():
         open(os.path.join(d, "__init__.py"), "a").close()
     failed = 0
     for dest, url, expected in SOURCES:
-        data = download(url)
+        try:
+            data = download(url)
+        except OSError as e:  # one unreachable host must not stop the other files
+            print(f"FAILED {dest}: {e}", file=sys.stderr)
+            failed += 1
+            continue
         digest = hashlib.sha256(data).hexdigest()
         if rehash:
             print(f'{dest} {digest}')
