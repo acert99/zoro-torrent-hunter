@@ -20,11 +20,12 @@ Opções:
 - `--top N`: resultados por busca (padrão 10)
 - `--engines a,b`: padrão `piratebay,nyaa,limetorrents,torrentscsv,rutor`. Extras: `pirateiro` (geral), `academictorrents` (datasets/cursos), `yts` (filmes), `animetosho` (anime), `sktorrent` (eslovaco)
 - `--timeout S`: segundos por site (padrão 20). Extras lentos: `--timeout 40`
-- `--json`: saída estruturada (`name, size, seeds, leech, engine, link, trust, downloads, infohash, score`)
+- `--json`: saída estruturada (`name, size, seeds, leech, engine, link, trust, downloads, infohash, score, sources`)
 
-Saída texto: `N. [score X] seedsS/leechL tamanho TRUST Ndl | nome (motor)` + linha com magnet/link.
+Saída texto: `N. [score X] seedsS/leechL tamanho TRUST Ndl | nome (sites)` + linha com magnet/link.
 
-- `score` = (seeds + 0.25×leech) × peso de confiança: `VIP` ×2, `TRUSTED` ×1.5, `REMAKE` ×0.3.
+- `score` = (seeds + 0.25×leech + 10×log10(1+downloads)) × peso de confiança: `VIP` ×2, `TRUSTED` ×1.5, `LICENSED` ×1.3, `REMAKE` ×0.3.
+- O mesmo torrent vindo de vários sites vira uma linha só: seeds, leech e downloads pegam o maior valor e `sources` lista os sites.
 - Confiança só existe em piratebay (vip/trusted) e nyaa (trusted/remake). Contagem de downloads (`dl`) só no nyaa. Nos outros sites: só seeds.
 
 Dicas de termo: nome + ano para filmes (`"dune 2021"`), `S01E01` para séries, `1080p`/`2160p`. Sem resultado: tirar palavras/versão.

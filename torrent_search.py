@@ -232,15 +232,25 @@ def infohash(link):
 
 
 def merge(results):
-    best = {}
+    """One row per torrent, like add() in ui.js: name and score come from the best-scoring copy,
+    peer and download counts take the max, and sources lists every engine that returned it."""
+    merged = {}
     for r in results:
         key = r["infohash"] or r["link"]
-        if key not in best or score(r) > score(best[key]):
-            best[key] = r
-    rows = list(best.values())
-    for r in rows:
-        r["score"] = score(r)
-    return sorted(rows, key=lambda r: r["score"], reverse=True)
+        r = dict(r, score=score(r))
+        cur = merged.get(key)
+        if cur is None:
+            merged[key] = dict(r, sources=[r["engine"]])
+            continue
+        if r["engine"] not in cur["sources"]:
+            cur["sources"].append(r["engine"])
+        best = r if r["score"] > cur["score"] else cur
+        dl = [d for d in (cur["downloads"], r["downloads"]) if d is not None]
+        cur.update(name=best["name"], score=best["score"], link=best["link"], engine=best["engine"],
+                   seeds=max(cur["seeds"], r["seeds"]), leech=max(cur["leech"], r["leech"]),
+                   downloads=max(dl) if dl else None, trust=cur["trust"] or r["trust"],
+                   size=cur["size"] if cur["size"] > 0 else r["size"])
+    return sorted(merged.values(), key=lambda r: r["score"], reverse=True)
 
 
 def human(n):
@@ -371,7 +381,7 @@ def main():
             extra = "".join(f" {x}" for x in (r["trust"].upper() if r["trust"] else "",
                                               f"{r['downloads']}dl" if r["downloads"] is not None else "") if x)
             print(f"{i}. [score {r['score']}] {r['seeds']}S/{r['leech']}L {human(r['size'])}{extra}"
-                  f" | {r['name']} ({r['engine']})")
+                  f" | {r['name']} ({', '.join(r['sources'])})")
             print(f"   {r['link']}")
 
 
