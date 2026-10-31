@@ -215,7 +215,7 @@ function renderTable() {
     let act;
     if (!link) act = `<span class="muted">${tr("badLink")}</span>`;
     else if (link.startsWith("magnet:")) act = `<a class="btn btn-primary btn-xs" href="${esc(link)}">${ICON.magnet}Magnet</a><button class="btn btn-ghost btn-icon btn-xs" data-copy="${esc(k)}" title="${tr("copy")}" aria-label="${tr("copy")}">${ICON.copy}</button>`;
-    else if (link.endsWith(".torrent")) act = `<a class="btn btn-outline btn-xs" href="${esc(link)}">${ICON.file}.torrent</a>`;
+    else if (r.torrent || link.endsWith(".torrent")) act = `<a class="btn btn-outline btn-xs" href="${esc(link)}">${ICON.file}.torrent</a>`;
     else act = `<button class="btn btn-primary btn-xs" data-resolve="${esc(k)}">${ICON.magnet}Magnet</button><a class="btn btn-ghost btn-icon btn-xs" href="${esc(link)}" target="_blank" rel="noopener noreferrer" title="${tr("openPage")}" aria-label="${tr("openPage")}">${ICON.ext}</a>`;
     return `<tr>
       <td><div class="score-cell"><span class="score-bar"><i style="--w:${Math.round(100 * r.score / top)}%"></i></span><span class="score-val">${r.score}</span></div></td>

@@ -114,6 +114,7 @@ class Handler(BaseHTTPRequestHandler):
             rows, err = [], "site falhou ou fora do ar"
         for r in rows:
             r["score"] = ts.score(r)
+            r["torrent"] = ts.is_torrent_url(engine, r["link"])  # direct .torrent download, nothing to resolve
         remember(engine, rows)
         self.send(200, {"engine": engine, "rows": rows, "error": err, "ms": int((time.time() - start) * 1000)})
 
