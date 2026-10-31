@@ -36,7 +36,7 @@ Tabela com os 5 melhores: número, seeds, tamanho, confiança, nome, site. Desca
 
 ## Baixar
 
-Usuário escolhe um número → abrir pelo número da última busca (resolve página→magnet, valida o link e abre no qBittorrent):
+Usuário escolhe um número → abrir pelo número da última busca (resolve página→magnet ou baixa o `.torrent`, valida e abre no qBittorrent). No `--json`, `torrent: true` marca link de download direto de `.torrent`:
 
 ```bash
 python -I ~/tools/zoro-torrent-hunter/torrent_search.py --open 3
