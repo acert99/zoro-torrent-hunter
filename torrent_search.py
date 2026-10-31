@@ -11,6 +11,7 @@ piratebay, nyaa and archive.org are fetched natively to expose uploader trust an
 import argparse
 import base64
 import binascii
+import hashlib
 import json
 import math
 import os
@@ -63,12 +64,14 @@ PB_TRACKERS = "&".join("tr=" + urllib.parse.quote(t, safe="") for t in (
 ))
 # yts links download a .torrent named by its infohash; a magnet built from it opens in one click and merges.
 YTS_RE = re.compile(r"https://yts\.[a-z]+/torrent/download/([0-9A-Fa-f]{40})")
-# Links that download a .torrent file directly (nothing to resolve), pinned per engine.
+# Links that download a .torrent file directly (nothing to resolve), pinned per engine. rutor sends magnets
+# once setup.py has configured it; its download links are the fallback.
 TORRENT_URL = {
     "archive": re.compile(r"https://archive\.org/download/[^/?#\s]+/[^/?#\s]+_archive\.torrent"),
     "academictorrents": re.compile(r"https://academictorrents\.com/download/[0-9A-Fa-f]{40}\.torrent"),
     "rutor": re.compile(r"https://d\.rutor\.info/download/\d+"),
 }
+MAX_TORRENT = 10 * 1024 * 1024
 
 
 def fetch(url):
@@ -89,7 +92,8 @@ def is_torrent_url(engine, link):
 def row(name, size, seeds, leech, engine, link, trust="", downloads=None):
     return {"name": name, "size": int(size) if str(size).lstrip("-").isdigit() else -1,
             "seeds": int(seeds), "leech": int(leech), "engine": engine, "link": link,
-            "trust": trust, "downloads": downloads, "infohash": infohash(link)}
+            "trust": trust, "downloads": downloads, "infohash": infohash(link),
+            "torrent": is_torrent_url(engine, link)}
 
 
 def search_piratebay(query, cat):
@@ -323,6 +327,20 @@ def save_last(report):
         pass
 
 
+def fetch_torrent(url):
+    """Save a .torrent from a pinned URL into the cache, so the OS opens it in the torrent client, not the browser."""
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=ENGINE_TIMEOUT) as r:
+        data = r.read(MAX_TORRENT + 1)
+    if len(data) > MAX_TORRENT or not data.startswith(b"d"):  # a .torrent is a bencoded dict
+        return ""
+    os.makedirs(os.path.dirname(LAST_RESULTS), exist_ok=True)
+    path = os.path.join(os.path.dirname(LAST_RESULTS), hashlib.sha1(url.encode()).hexdigest() + ".torrent")
+    with open(path, "wb") as f:
+        f.write(data)
+    return path
+
+
 def open_result(n):
     """Open result N of the last search. Takes only an integer so no result text ever reaches a shell."""
     try:
@@ -331,8 +349,11 @@ def open_result(n):
         r = rows[n - 1]
     except (OSError, ValueError, IndexError):
         sys.exit(f"no result {n} in last search")
-    if is_torrent_url(r["engine"], r["link"]):
-        target = r["link"]
+    if is_torrent_url(r["engine"], r["link"]):  # re-checked: last.json is only a cache
+        try:
+            target = fetch_torrent(r["link"])
+        except OSError:
+            target = ""
     else:
         target = resolve_magnet(r["engine"], r["link"])
     if not target:

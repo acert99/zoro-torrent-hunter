@@ -8,6 +8,7 @@ Plugins are third-party Python that runs with your user's privileges, so every f
 commit and checked against a sha256. To update one: review the new code, bump its commit, --rehash.
 """
 import hashlib
+import json
 import os
 import sys
 import urllib.request
@@ -48,6 +49,10 @@ SOURCES = (
     ("engines/animetosho.py", GH + "Phlexis96/qBitTorrent-animetosho-search-plugin/beaf4808db7454a5d0c4528cece5ee0e629eaa04/animetosho.py", "78af019cbf2c0b315f2c6b877541ea40483e4c48209b06f9d4c9e9941cfef6d9"),
     ("engines/sktorrent.py", GH + "Ashalda/sktorrent-qbt/2c88a66408ae98f4544fd4fe4081a4f201205a36/sktorrent.py", "a917b482741a0b301f09ce0c1edbfe5d7b4663c2367ede1a1bcde2641d62e28c"),
 )
+# rutor prints .torrent download links unless its config asks for the magnets already on the search page.
+# The plugin rewrites this file with defaults if any key is missing or has the wrong type.
+RUTOR_CONFIG = {"magnet": True, "proxy": False, "proxies": {"http": "", "https": ""},
+                "ua": "Mozilla/5.0 (X11; Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0 "}
 
 
 def download(url):
@@ -74,6 +79,9 @@ def main():
         with open(os.path.join(NOVA_DIR, dest), "wb") as f:
             f.write(data)
         print("ok", dest)
+    if not rehash:
+        with open(os.path.join(ENGINES_DIR, "rutor.json"), "w", encoding="utf-8") as f:
+            json.dump(RUTOR_CONFIG, f, indent=4)
     sys.exit(1 if failed else 0)
 
 
