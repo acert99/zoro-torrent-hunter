@@ -180,7 +180,10 @@ def kill_tree(proc):
     if os.name == "nt":
         subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
     else:
-        os.killpg(proc.pid, 9)
+        try:
+            os.killpg(proc.pid, 9)
+        except ProcessLookupError:  # finished between the timeout and the kill
+            pass
 
 
 def search_nova(engine, query, cat):
@@ -373,7 +376,7 @@ def open_result(n):
     if os.name == "nt":
         os.startfile(target)
     else:
-        subprocess.run(["xdg-open", target], check=False)
+        subprocess.run(["open" if sys.platform == "darwin" else "xdg-open", target], check=False)
     print(f"opened: {r['name']}")
 
 

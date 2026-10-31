@@ -103,8 +103,23 @@ git clone https://github.com/acert99/zoro-torrent-hunter ~/tools/zoro-torrent-hu
 cd ~/tools/zoro-torrent-hunter
 pip install certifi
 python -I setup.py     # baixa o runtime nova3 e os plugins fixados para vendor/
-python -I web.py       # abre a interface (no Windows: start-ui.bat)
+python -I web.py       # abre a interface (atalhos: start-ui.bat no Windows, ./start-ui.sh no Linux/macOS)
 ```
+</details>
+
+<details>
+<summary><b>Linux e macOS</b></summary>
+
+Pelo código-fonte, como acima, ou com `./start-ui.sh`. Para um pacote que roda sem Python instalado:
+
+```bash
+pip install pyinstaller certifi
+python3 -I setup.py
+python3 -I build.py    # dist/Zoro-linux-x86_64.tar.gz, dist/Zoro-macos-arm64.tar.gz...
+tar xzf dist/Zoro-*.tar.gz && ./Zoro/Zoro
+```
+
+O workflow **build (Linux, macOS)** na aba Actions gera os dois pacotes. No macOS o app não é assinado: se o Gatekeeper bloquear, rode `xattr -dr com.apple.quarantine Zoro` na pasta extraída.
 </details>
 
 <details>
@@ -130,8 +145,8 @@ cp skill/SKILL.md ~/.claude/skills/torrent-search/
 ```bash
 pip install pyinstaller certifi
 python -I setup.py     # plugins em vendor/
-python -I build.py     # dist/Zoro/Zoro.exe
-ISCC installer.iss     # Inno Setup 6 -> dist/Zoro-Setup.exe
+python -I build.py     # dist/Zoro/Zoro.exe (Linux/macOS: dist/Zoro-<so>-<arq>.tar.gz)
+ISCC installer.iss     # só Windows: Inno Setup 6 -> dist/Zoro-Setup.exe
 ```
 
 Os plugins ficam congelados dentro do exe. Para atualizar os sites, gere de novo.
