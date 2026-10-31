@@ -17,7 +17,7 @@ const ICON = {
 
 let meta = { engines: [], default: [], cats: [] };
 let enabled = new Set(), engineState = {}, results = new Map();
-let sortKey = "score", sortDir = -1, searchId = 0, progress = { done: 0, total: 0 }, started = 0, elapsed = 0;
+let sortKey = "score", sortDir = -1, searchId = 0, progress = { done: 0, total: 0 }, started = 0, elapsed = 0, ctrl = null;
 
 function human(n) {
   if (n == null || n < 0) return "—";
@@ -77,10 +77,22 @@ $("#all").onclick = () => setEnabled(() => true);
 $("#none").onclick = () => setEnabled(() => false);
 $("#def").onclick = () => setEnabled((e) => meta.default.includes(e) || e === "archive");
 
+// 503 means the server is still busy with engines from an earlier search: wait and try again.
+async function getJSON(url, signal) {
+  for (let i = 1; ; i++) {
+    const res = await fetch(url, { signal });
+    if (res.status !== 503 || i === 4) return res.json();
+    await new Promise((ok) => setTimeout(ok, 1000 * i));
+  }
+}
+
 async function search(ev) {
   ev.preventDefault();
   const q = $("#q").value.trim(); if (!q) { $("#q").focus(); return; }
   const id = ++searchId; results = new Map(); engineState = {};
+  // Drop the previous search's requests: the browser allows ~6 connections per host, so queued
+  // ones would otherwise run before this search's.
+  ctrl?.abort(); ctrl = new AbortController(); const { signal } = ctrl;
   const active = meta.engines.filter((e) => enabled.has(e));
   active.forEach((e) => { engineState[e] = { state: "run" }; });
   progress = { done: 0, total: active.length }; started = performance.now(); elapsed = 0;
@@ -88,7 +100,7 @@ async function search(ev) {
   await Promise.all(active.map(async (e) => {
     try {
       const url = `/api/search?engine=${encodeURIComponent(e)}&q=${encodeURIComponent(q)}&cat=${encodeURIComponent($("#cat").value)}`;
-      const d = await (await fetch(url)).json();
+      const d = await getJSON(url, signal);
       if (id !== searchId) return;
       (d.rows || []).forEach(add);
       engineState[e] = { state: d.error ? "err" : "ok", n: (d.rows || []).length, ms: d.ms, err: d.error };
