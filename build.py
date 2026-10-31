@@ -1,4 +1,5 @@
-"""Build dist/Zoro/Zoro.exe (PyInstaller, one-folder).
+"""Build dist/Zoro/Zoro.exe (PyInstaller, one-folder). On Linux and macOS: dist/Zoro/Zoro, packed
+into dist/Zoro-<os>-<arch>.tar.gz.
 
 Usage: python -I setup.py && python -I build.py
 One-folder, not one-file: every engine runs as a child process of the exe, and a one-file exe
@@ -6,6 +7,8 @@ would unpack itself again for each of them.
 """
 import ast
 import os
+import platform
+import shutil
 import subprocess
 import sys
 
@@ -44,13 +47,21 @@ def main():
         "--hidden-import", "run_engine",
         "--hidden-import", "certifi",
         "--exclude-module", "tkinter",
-        "--icon", os.path.join("assets", "icon.ico"),
     ]
+    if sys.platform == "win32":  # macOS wants .icns (or Pillow to convert); Linux executables have no icon
+        args += ["--icon", os.path.join("assets", "icon.ico")]
     for m in plugin_stdlib_imports():
         args += ["--hidden-import", m]
     args.append("web.py")
     subprocess.run(args, cwd=HERE, check=True)
-    print(os.path.join(HERE, "dist", "Zoro", "Zoro.exe"))
+    dist = os.path.join(HERE, "dist")
+    if sys.platform == "win32":
+        print(os.path.join(dist, "Zoro", "Zoro.exe"))  # installer: ISCC installer.iss
+        return
+    # tar keeps the executable bit, which a zip made here would not reliably carry
+    name = "macos" if sys.platform == "darwin" else sys.platform
+    arch = {"amd64": "x86_64", "aarch64": "arm64"}.get(platform.machine().lower(), platform.machine().lower())
+    print(shutil.make_archive(os.path.join(dist, f"Zoro-{name}-{arch}"), "gztar", dist, "Zoro"))
 
 
 if __name__ == "__main__":
